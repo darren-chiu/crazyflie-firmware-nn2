@@ -33,6 +33,7 @@
 #include "autoconf.h"
 #include "config.h"
 #include "math.h"
+#include "motors.h"
 
 #ifndef CONFIG_MOTORS_DEFAULT_IDLE_THRUST
 #  define DEFAULT_IDLE_THRUST 0
@@ -114,6 +115,15 @@ static void powerDistributionForceTorque(const control_t *control, motors_thrust
 
 static void powerDistributionForce(const control_t *control, motors_thrust_uncapped_t* motorThrustUncapped) {
   // Not implemented yet
+  // motorThrustUncapped->motors.m1 = control->normalizedForces[0];
+  // motorThrustUncapped->motors.m2 = control->normalizedForces[1];
+  // motorPower.m3 = control->normalizedForces[2];
+  // motorPower.m4 = control->normalizedForces[3];
+
+  motorsSetRatio(motorThrustUncapped->motors.m1, control->normalizedForces[0]);
+  motorsSetRatio(motorThrustUncapped->motors.m2, control->normalizedForces[1]);
+  motorsSetRatio(motorThrustUncapped->motors.m3, control->normalizedForces[2]);
+  motorsSetRatio(motorThrustUncapped->motors.m4, control->normalizedForces[3]);
 }
 
 void powerDistribution(const control_t *control, motors_thrust_uncapped_t* motorThrustUncapped)
