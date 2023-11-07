@@ -12,7 +12,7 @@ void controllerNN(control_t *control, const setpoint_t *setpoint,
                                          const state_t *state,
                                          const stabilizerStep_t stabilizerStep);
 
-void thrusts2PWM(control_t_n *control_n, 
+void normalizeThrust(control_t_n *control_n, 
 	int *PWM_0, int *PWM_1, int *PWM_2, int *PWM_3);
 
 float scale(float v);

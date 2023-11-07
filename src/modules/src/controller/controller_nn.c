@@ -22,7 +22,7 @@ static bool relOmega = true;
 static bool relXYZ = true;
 static uint16_t freq = 500;
 
-static control_t_n control_n;
+static control_t_n control_network; // This is the control struct generated from the neural network.
 static struct mat33 rot;
 static float state_array[18];
 // static float state_array[22];
@@ -30,10 +30,10 @@ static float state_array[18];
 static uint32_t usec_eval;
 
 void controllerNNInit(void) {
-	control_n.thrust_0 = 0.0f;
-	control_n.thrust_1 = 0.0f;
-	control_n.thrust_2 = 0.0f;
-	control_n.thrust_3 = 0.0f;
+	control_network.thrust_0 = 0.0f;
+	control_network.thrust_1 = 0.0f;
+	control_network.thrust_2 = 0.0f;
+	control_network.thrust_3 = 0.0f;
 }
 
 
@@ -144,13 +144,13 @@ void controllerNN(control_t *control,
 
 	// run the neural neural network
 	uint64_t start = usecTimestamp();
-	networkEvaluate(&control_n, state_array);
+	networkEvaluate(&control_network, state_array);
 	usec_eval = (uint32_t) (usecTimestamp() - start);
 
 	// convert thrusts to directly to PWM
 	// need to hack the firmware (stablizer.c and power_distribution_stock.c)
-	int PWM_0, PWM_1, PWM_2, PWM_3; 
-	thrusts2PWM(&control_n, &PWM_0, &PWM_1, &PWM_2, &PWM_3);
+	int iThrust_0, iThrust_1, iThrust_2, iThrust_3; 
+	normalizeThrust(&control_network, &iThrust_0, &iThrust_1, &iThrust_2, &iThrust_3);
 
 	if (setpoint->mode.z == modeDisable) {
 		// control->motorRatios[0] = 0;
@@ -166,15 +166,15 @@ void controllerNN(control_t *control,
 		// control->motorRatios[1] = PWM_1;
 		// control->motorRatios[2] = PWM_2;
 		// control->motorRatios[3] = PWM_3;
-		control->normalizedForces[0] = PWM_0;
-		control->normalizedForces[1] = PWM_1;
-		control->normalizedForces[2] = PWM_2;
-		control->normalizedForces[3] = PWM_3;
+		control->normalizedForces[0] = iThrust_0;
+		control->normalizedForces[1] = iThrust_1;
+		control->normalizedForces[2] = iThrust_2;
+		control->normalizedForces[3] = iThrust_3;
 	}
 }
 
 // Is this actually PWM or normalized thrusts? 
-void thrusts2PWM(control_t_n *control_n, 
+void normalizeThrust(control_t_n *control_n, 
 	int *PWM_0, int *PWM_1, int *PWM_2, int *PWM_3){
 
 	#if 0
@@ -240,10 +240,10 @@ PARAM_ADD(PARAM_UINT16, freq, &freq)
 PARAM_GROUP_STOP(ctrlNN)
 
 LOG_GROUP_START(ctrlNN)
-LOG_ADD(LOG_FLOAT, out0, &control_n.thrust_0)
-LOG_ADD(LOG_FLOAT, out1, &control_n.thrust_1)
-LOG_ADD(LOG_FLOAT, out2, &control_n.thrust_2)
-LOG_ADD(LOG_FLOAT, out3, &control_n.thrust_3)
+LOG_ADD(LOG_FLOAT, out0, &control_network.thrust_0)
+LOG_ADD(LOG_FLOAT, out1, &control_network.thrust_1)
+LOG_ADD(LOG_FLOAT, out2, &control_network.thrust_2)
+LOG_ADD(LOG_FLOAT, out3, &control_network.thrust_3)
 
 LOG_ADD(LOG_FLOAT, in0, &state_array[0])
 LOG_ADD(LOG_FLOAT, in1, &state_array[1])

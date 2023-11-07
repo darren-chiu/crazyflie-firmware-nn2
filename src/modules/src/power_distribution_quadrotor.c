@@ -114,16 +114,10 @@ static void powerDistributionForceTorque(const control_t *control, motors_thrust
 }
 
 static void powerDistributionForce(const control_t *control, motors_thrust_uncapped_t* motorThrustUncapped) {
-  // Not implemented yet
-  // motorThrustUncapped->motors.m1 = control->normalizedForces[0];
-  // motorThrustUncapped->motors.m2 = control->normalizedForces[1];
-  // motorPower.m3 = control->normalizedForces[2];
-  // motorPower.m4 = control->normalizedForces[3];
-
-  motorsSetRatio(motorThrustUncapped->motors.m1, control->normalizedForces[0]);
-  motorsSetRatio(motorThrustUncapped->motors.m2, control->normalizedForces[1]);
-  motorsSetRatio(motorThrustUncapped->motors.m3, control->normalizedForces[2]);
-  motorsSetRatio(motorThrustUncapped->motors.m4, control->normalizedForces[3]);
+  // Course implementation for use with NN Controller with list form. 
+  for (int motorIndex = 0; motorIndex < STABILIZER_NR_OF_MOTORS; motorIndex++) {
+    motorThrustUncapped->list[motorIndex] = control->normalizedForces[motorIndex]
+  }
 }
 
 void powerDistribution(const control_t *control, motors_thrust_uncapped_t* motorThrustUncapped)
