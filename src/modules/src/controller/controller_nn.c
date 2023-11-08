@@ -147,7 +147,7 @@ void controllerNN(control_t *control,
 	networkEvaluate(&control_network, state_array);
 	usec_eval = (uint32_t) (usecTimestamp() - start);
 
-	// convert thrusts to directly to PWM
+	// convert thrusts to normalized Thrust
 	// need to hack the firmware (stablizer.c and power_distribution_stock.c)
 	int iThrust_0, iThrust_1, iThrust_2, iThrust_3; 
 	normalizeThrust(&control_network, &iThrust_0, &iThrust_1, &iThrust_2, &iThrust_3);
