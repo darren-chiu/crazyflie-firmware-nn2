@@ -33,7 +33,6 @@
 #include "autoconf.h"
 #include "config.h"
 #include "math.h"
-#include "motors.h"
 
 #ifndef CONFIG_MOTORS_DEFAULT_IDLE_THRUST
 #  define DEFAULT_IDLE_THRUST 0
