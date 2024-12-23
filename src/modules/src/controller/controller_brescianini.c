@@ -74,7 +74,7 @@ static float thrust_reduction_fairness = 0.25;
 
 // minimum and maximum body rates
 static float omega_rp_max = 30;
-static float omega_yaw_max = 10;
+static float omega_yaw_max = 10.0;
 static float heuristic_rp = 12;
 static float heuristic_yaw = 5;
 

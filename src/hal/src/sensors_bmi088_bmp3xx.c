@@ -83,7 +83,7 @@
 #define SENSORS_NBR_OF_BIAS_SAMPLES  512
 
 // Variance threshold to take zero bias for gyro
-#define GYRO_VARIANCE_BASE              100
+#define GYRO_VARIANCE_BASE              100  //100
 #define GYRO_VARIANCE_THRESHOLD_X       (GYRO_VARIANCE_BASE)
 #define GYRO_VARIANCE_THRESHOLD_Y       (GYRO_VARIANCE_BASE)
 #define GYRO_VARIANCE_THRESHOLD_Z       (GYRO_VARIANCE_BASE)
@@ -322,6 +322,7 @@ static void sensorsTask(void *param)
       gyroScaledIMU.y =  (gyroRaw.y - gyroBias.y) * SENSORS_BMI088_DEG_PER_LSB_CFG;
       gyroScaledIMU.z =  (gyroRaw.z - gyroBias.z) * SENSORS_BMI088_DEG_PER_LSB_CFG;
       sensorsAlignToAirframe(&gyroScaledIMU, &sensorData.gyro);
+
       // Do not apply low pass, the delay messes with the controller.
       // applyAxis3fLpf((lpf2pData*)(&gyroLpf), &sensorData.gyro);
 
@@ -335,7 +336,8 @@ static void sensorsTask(void *param)
       accScaledIMU.z = accelRaw.z * SENSORS_BMI088_G_PER_LSB_CFG / accScale;
       sensorsAlignToAirframe(&accScaledIMU, &accScaled);
       sensorsAccAlignToGravity(&accScaled, &sensorData.acc);
-      applyAxis3fLpf((lpf2pData*)(&accLpf), &sensorData.acc);
+      // Do not apply low pass, the delay messes with the controller.
+      // applyAxis3fLpf((lpf2pData*)(&accLpf), &sensorData.acc);
 
       measurement.type = MeasurementTypeAcceleration;
       measurement.data.acceleration.acc = sensorData.acc;

@@ -395,11 +395,11 @@ static void sensorsDeviceInit(void)
   // Set digital low-pass bandwidth for gyro
   mpu6500SetDLPFMode(MPU6500_DLPF_BW_98);
   // Init second order filer for accelerometer
-  for (uint8_t i = 0; i < 3; i++)
-  {
-    lpf2pInit(&gyroLpf[i], 1000, GYRO_LPF_CUTOFF_FREQ);
-    lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
-  }
+  // for (uint8_t i = 0; i < 3; i++)
+  // {
+  //   lpf2pInit(&gyroLpf[i], 1000, GYRO_LPF_CUTOFF_FREQ);
+  //   lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
+  // }
 
 
 #ifdef SENSORS_ENABLE_MAG_AK8963
